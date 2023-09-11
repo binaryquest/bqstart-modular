@@ -55,7 +55,8 @@ class Build : NukeBuild
             PackagesDirectory.CreateOrCleanDirectory();
         });
 
-    Target Restore => _ => _        
+    Target Restore => _ => _
+        .DependsOn(Clean)
         .Executes(() =>
         {
             DotNetTasks.DotNetRestore(s => s
