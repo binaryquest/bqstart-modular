@@ -30,7 +30,7 @@ namespace BinaryQuest.Framework.ModularCore
             services.AddSingleton<ICacheManager>(appSvc);
             services.AddSingleton(opt.SecurityRulesProvider);
 
-            services.AddControllersWithViews()
+            services.AddControllers()
                 .AddNewtonsoftJson(json =>
                 {
                     json.SerializerSettings.DateTimeZoneHandling = opt.TimeZoneHandling;
@@ -54,7 +54,7 @@ namespace BinaryQuest.Framework.ModularCore
                 //})
                 .AddOData(oData =>
                 {
-                    oData.TimeZone = TimeZoneInfo.Utc;
+                    oData.TimeZone = opt.TimeZoneHandling == Newtonsoft.Json.DateTimeZoneHandling.Utc ? TimeZoneInfo.Utc : TimeZoneInfo.Local;
                     oData.AddRouteComponents("odata", opt.GetEdmModel<TDb>(services, appSvc));
                     oData.EnableAttributeRouting = true;
                     oData.OrderBy().Filter().Select().Expand().Count().SetMaxTop(null);

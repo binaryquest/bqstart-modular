@@ -296,11 +296,11 @@ namespace BinaryQuest.Framework.ModularCore.Implementation
         ///     UpdateChildObjectsTree<OrderDetails>(entity.Details);
         /// }
         /// </example>
-        protected void UpdateChildObjectsTree<T>(ICollection<T> objectLines) where T : BaseEntity<TKey>
+        protected void UpdateChildObjectsTree<T>(ICollection<T> objectLines) where T : class, INotPersistingProperties
         {
             if (objectLines.Count > 0)
             {
-                List<T> deletedList = new List<T>();
+                List<T> deletedList = new();
                 // List<History> HistoryList = new List<History>();
                 foreach (var row in objectLines)
                 {

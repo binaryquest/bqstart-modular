@@ -91,7 +91,7 @@ class Build : NukeBuild
        .DependsOn(Pack)
        .Requires(() => NugetApiUrl)
        .Requires(() => NugetApiKey)
-       .Requires(() => Configuration.Equals(Configuration.Release))
+       //.Requires(() => Configuration.Equals(Configuration.Release))
        .Executes(() =>
        {
            PackagesDirectory.GlobFiles(PackagesDirectory, "BinaryQuest.Framework.ModularCore.*.nupkg")
