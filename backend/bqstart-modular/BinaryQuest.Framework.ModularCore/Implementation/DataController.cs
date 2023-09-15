@@ -1,14 +1,17 @@
-﻿using BinaryQuest.Framework.ModularCore.Interface;
+﻿using BinaryQuest.Framework.ModularCore;
+using BinaryQuest.Framework.ModularCore.Interface;
 using BinaryQuest.Framework.ModularCore.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
+using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +19,7 @@ using System.Threading.Tasks;
 namespace BinaryQuest.Framework.ModularCore.Implementation
 {
     public abstract class DataController<TEntity, TKey> : ODataController, IDataController<TEntity, TKey> where TEntity : class
-    {
+    {        
         protected readonly IApplicationService applicationService;
 #pragma warning disable IDE0044 // Add readonly modifier
         private Expression<Func<TEntity, bool>>? securityWhereClause = null;
@@ -74,8 +77,25 @@ namespace BinaryQuest.Framework.ModularCore.Implementation
                 return Unauthorized();
             }
 
-            var result = OnGetLookupData();
-            return Ok(result);
+            //check if we should cache it            
+            var type = this.GetType();
+            var test = type.GetMethod(nameof(OnGetLookupData));
+            var methods = this.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic);
+            var method = methods.SingleOrDefault(x => x.Name == nameof(this.OnGetLookupData));
+            var attribute = method?.GetCustomAttributes(typeof(LookupCacheAttribute), true).Single() as LookupCacheAttribute;
+            bool isDefined = attribute != null;
+
+            if (isDefined && attribute!=null)
+            {
+                string key = $"cache://{this.GetType().FullName}/{nameof(OnGetLookupData)}";
+                var result = this.applicationService.TryToGetObject(key, () => OnGetLookupData(), attribute.Expiry, attribute.SlidingExpire);
+                return Ok(result);
+            }
+            else
+            {
+                var result = OnGetLookupData();
+                return Ok(result);
+            }            
         }
 
         [HttpPost]

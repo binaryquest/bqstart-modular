@@ -23,10 +23,11 @@ namespace BinaryQuest.Framework.ModularCore.Implementation
             this.dbContextType = dbContextType;
             var cacheConfig = ConfigurationBuilder.BuildConfiguration(settings =>
             {
-                settings.WithMicrosoftMemoryCacheHandle("inprocess");
+                settings.WithMicrosoftMemoryCacheHandle("inprocess");                
             });
 
             cacheManager = CacheFactory.FromConfiguration<object>("systemCache", cacheConfig);            
+            
         }
 
         public Bootdata Bootdata { get; }
@@ -90,8 +91,24 @@ namespace BinaryQuest.Framework.ModularCore.Implementation
                 if (cacheManager != null)
                 {
                     lock (lockObject)
-                    {
+                    {                        
                         cacheManager.AddOrUpdate(key, obj, (x) => { return obj; });
+                    }
+                }
+            }
+        }
+
+        public void SetObject<T>(string key, T obj, int expiry, bool isSliding)
+        {
+            key = "cache:" + "/" + key;
+            if (obj != null)
+            {
+                if (cacheManager != null)
+                {
+                    var item = new CacheItem<object>(key, obj, isSliding ? ExpirationMode.Sliding : ExpirationMode.Absolute, TimeSpan.FromMinutes(expiry));
+                    lock (lockObject)
+                    {
+                        cacheManager.Add(item);
                     }
                 }
             }
@@ -106,6 +123,24 @@ namespace BinaryQuest.Framework.ModularCore.Implementation
                 {
 #pragma warning disable CS8603 // Possible null reference return.
                     return (T)cacheManager.GetOrAdd(key, (f) => { return newObjectProvider(); });
+#pragma warning restore CS8603 // Possible null reference return.
+                }
+            }
+            return default;
+        }
+
+        public T? TryToGetObject<T>(string key, Func<T> newObjectProvider, int expiry, bool isSliding)
+        {
+            key = "cache:" + "/" + key;
+            if (cacheManager != null)
+            {
+                lock (lockObject)
+                {
+#pragma warning disable CS8603 // Possible null reference return.
+                    return (T)cacheManager.GetOrAdd(key, (f) => {
+                        var item = new CacheItem<object>(key, newObjectProvider()!, isSliding ? ExpirationMode.Sliding : ExpirationMode.Absolute, TimeSpan.FromMinutes(expiry));
+                        return newObjectProvider(); 
+                    });
 #pragma warning restore CS8603 // Possible null reference return.
                 }
             }

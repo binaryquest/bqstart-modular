@@ -1,4 +1,5 @@
-﻿using BinaryQuest.Framework.ModularCore.Implementation;
+﻿using BinaryQuest.Framework.ModularCore;
+using BinaryQuest.Framework.ModularCore.Implementation;
 using BinaryQuest.Framework.ModularCore.Interface;
 using bqStart.Data;
 
@@ -13,6 +14,7 @@ public class ExampleClassController : GenericDataController<ExampleClass, int>
         ExpandedTablesForSingleEntity = "Department";
     }
 
+    [LookupCache(expiryInMin: 5)]
     protected override dynamic OnGetLookupData()
     {
         var deps = this.unitOfWork.GenericRepository<Department>().Get();
