@@ -78,12 +78,18 @@ namespace BinaryQuest.Framework.ModularCore.Implementation
             }
 
             //check if we should cache it            
-            var type = this.GetType();
-            var test = type.GetMethod(nameof(OnGetLookupData));
+            bool isDefined = false;
+            LookupCacheAttribute? attribute = null;
+            var type = this.GetType();            
             var methods = this.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic);
             var method = methods.SingleOrDefault(x => x.Name == nameof(this.OnGetLookupData));
-            var attribute = method?.GetCustomAttributes(typeof(LookupCacheAttribute), true).Single() as LookupCacheAttribute;
-            bool isDefined = attribute != null;
+            var attributes = method?.GetCustomAttributes(typeof(LookupCacheAttribute), true);
+            if (attributes != null && attributes.Length > 0)
+            {
+                attribute = attributes?.Single() as LookupCacheAttribute;
+                isDefined = attribute != null;
+            }
+            
 
             if (isDefined && attribute!=null)
             {
