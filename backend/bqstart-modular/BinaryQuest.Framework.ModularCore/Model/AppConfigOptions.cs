@@ -313,7 +313,29 @@ namespace BinaryQuest.Framework.ModularCore.Model
                     if (efProp != null)
                     {
                         field.MaxLength = efProp.GetMaxLength();
-                        field.AutoGen = efProp.ValueGenerated != ValueGenerated.Never;
+                        var debugView = efProp.AnnotationsToDebugString();
+                        if (debugView.Contains("IdentityColumn"))
+                        {
+                            field.AutoGen = true;
+                        }
+                        field.MaxLength = efProp.GetMaxLength();
+                        switch (efProp.ValueGenerated)
+                        {
+                            case ValueGenerated.Never:
+                                break;
+                            case ValueGenerated.OnAdd:
+                                break;
+                            case ValueGenerated.OnUpdate:
+                                field.AutoGen = true;
+                                break;
+                            case ValueGenerated.OnUpdateSometimes:
+                                break;
+                            case ValueGenerated.OnAddOrUpdate:
+                                field.AutoGen = true;
+                                break;
+                            default:
+                                break;
+                        }
                         field.IsNullable = efProp.IsNullable;
                         field.IsForeignKey = efProp.IsForeignKey();
                     }
@@ -442,7 +464,29 @@ namespace BinaryQuest.Framework.ModularCore.Model
                     if (efProp != null)
                     {
                         field.MaxLength = efProp.GetMaxLength();
-                        field.AutoGen = efProp.ValueGenerated != ValueGenerated.Never;
+                        var debugView = efProp.AnnotationsToDebugString();
+                        if (debugView.Contains("IdentityColumn"))
+                        {
+                            field.AutoGen = true;
+                        }
+                        field.MaxLength = efProp.GetMaxLength();
+                        switch (efProp.ValueGenerated)
+                        {
+                            case ValueGenerated.Never:
+                                break;
+                            case ValueGenerated.OnAdd:
+                                break;
+                            case ValueGenerated.OnUpdate:
+                                field.AutoGen = true;
+                                break;
+                            case ValueGenerated.OnUpdateSometimes:
+                                break;
+                            case ValueGenerated.OnAddOrUpdate:
+                                field.AutoGen = true;
+                                break;
+                            default:
+                                break;
+                        }
                         field.IsNullable = efProp.IsNullable;
                         field.IsForeignKey = efProp.IsForeignKey();
                     }
