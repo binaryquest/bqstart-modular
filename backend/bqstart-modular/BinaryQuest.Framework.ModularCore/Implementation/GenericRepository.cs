@@ -104,9 +104,15 @@ namespace BinaryQuest.Framework.ModularCore.Implementation
 
         public virtual void Update(TEntity entityToUpdate)
         {
-            dbSet.Attach(entityToUpdate);
-            context.Entry(entityToUpdate).State = EntityState.Modified;
-        }
+            //dbSet.Attach(entityToUpdate);
+            //context.Entry(entityToUpdate).State = EntityState.Modified;
+
+            var entry = dbSet.Attach(entityToUpdate);            
+            var updated = entry.CurrentValues.Clone();
+            entry.Reload();
+            entry.CurrentValues.SetValues(updated);
+            entry.State = EntityState.Modified;
+        }        
 
         public IQueryable<TEntity> GetByIdQuery(object[] keyValues, string includeProperties = "")
         {
