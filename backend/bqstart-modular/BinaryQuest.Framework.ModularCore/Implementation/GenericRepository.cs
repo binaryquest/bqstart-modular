@@ -82,6 +82,7 @@ namespace BinaryQuest.Framework.ModularCore.Implementation
         public virtual void Insert(TEntity entity)
         {
             dbSet.Add(entity);
+            dbSet.Entry(entity).State = EntityState.Added;
         }
 
         public virtual void Delete(object[] id)

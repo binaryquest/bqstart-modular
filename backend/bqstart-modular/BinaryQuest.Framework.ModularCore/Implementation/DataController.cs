@@ -50,7 +50,9 @@ namespace BinaryQuest.Framework.ModularCore.Implementation
                 return Unauthorized();
             }
 
-            IQueryable results = await OnGetData();
+            var results = await OnGetData();
+
+            OnAfterSelect(results);
 
             return Ok(results);
         }
@@ -63,6 +65,8 @@ namespace BinaryQuest.Framework.ModularCore.Implementation
             }
 
             var result = await OnGetSingleData(keyValues);
+
+            OnAfterSingleSelect(result);
 
             return Ok(result);
         }
@@ -184,6 +188,16 @@ namespace BinaryQuest.Framework.ModularCore.Implementation
         }
 
         protected virtual void OnAfterDelete(TEntity entity)
+        {
+
+        }
+
+        protected virtual void OnAfterSelect(IQueryable<TEntity> entities)
+        {
+
+        }
+
+        protected virtual void OnAfterSingleSelect(TEntity? entity)
         {
 
         }
