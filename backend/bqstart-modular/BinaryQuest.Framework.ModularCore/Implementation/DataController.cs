@@ -97,7 +97,7 @@ namespace BinaryQuest.Framework.ModularCore.Implementation
 
             if (isDefined && attribute!=null)
             {
-                string key = $"cache://{this.GetType().FullName}/{nameof(OnGetLookupData)}";
+                string key = attribute.CacheKey ?? $"cache://{this.GetType().FullName}/{nameof(OnGetLookupData)}";
                 var result = this.applicationService.TryToGetObject(key, () => OnGetLookupData(), attribute.Expiry, attribute.SlidingExpire);
                 return Ok(result);
             }

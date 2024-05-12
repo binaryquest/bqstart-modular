@@ -2,32 +2,28 @@
 
 /// <summary>
 /// if present the output values will be cached in memory for the specified times
-/// in genertic controllers Lookup Data function
+/// in generic controllers Lookup Data function
 /// </summary>
+/// <remarks>
+/// if present the output values will be cached in memory for the specified times
+/// </remarks>
+/// <param name="expiry">expiry in Minute</param>
+/// <param name="slidingExpire">Is Sliding Expiry? else Absolute in Min</param>
 [System.AttributeUsage(AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
-public sealed class LookupCacheAttribute : Attribute
+public sealed class LookupCacheAttribute(int expiryInMin, bool slidingExpire = false, string? cacheKey = null) : Attribute
 {
-    readonly int expiry;
-    readonly bool slidingExpire;
-
-    /// <summary>
-    /// if present the output values will be cached in memory for the specified times
-    /// </summary>
-    /// <param name="expiry">expiry in Minute</param>
-    /// <param name="slidingExpire">Is Sliding Expirty? else Absolute in Min</param>
-    public LookupCacheAttribute(int expiryInMin, bool slidingExpire = false)
-    {
-        this.expiry = expiryInMin;
-        this.slidingExpire = slidingExpire;
-    }
-
     public int Expiry
     {
-        get { return expiry; }
+        get { return expiryInMin; }
     }
 
     public bool SlidingExpire
     {
         get { return slidingExpire; }
-    }        
+    }
+
+    public string? CacheKey
+    {
+        get { return cacheKey; }
+    }
 }
