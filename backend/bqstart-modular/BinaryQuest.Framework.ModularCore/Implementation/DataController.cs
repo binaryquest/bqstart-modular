@@ -192,9 +192,19 @@ namespace BinaryQuest.Framework.ModularCore.Implementation
 
         }
 
+        protected virtual Task OnAfterEditAsync(TEntity entity)
+        {
+            return Task.FromResult(entity);
+        }
+
         protected virtual void OnAfterDelete(TEntity entity)
         {
 
+        }
+
+        protected virtual Task OnAfterDeleteAsync(TEntity entity)
+        {
+            return Task.FromResult(entity);
         }
 
         protected virtual void OnAfterSelect(IQueryable<TEntity> entities)

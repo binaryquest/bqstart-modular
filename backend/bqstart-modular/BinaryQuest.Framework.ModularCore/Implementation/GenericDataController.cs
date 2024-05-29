@@ -165,6 +165,7 @@ namespace BinaryQuest.Framework.ModularCore.Implementation
                 await this.unitOfWork.SaveAsync();
 
                 OnAfterEdit(entity);
+                await OnAfterEditAsync(entity);
 
                 return Updated(entity);
             }
@@ -221,6 +222,7 @@ namespace BinaryQuest.Framework.ModularCore.Implementation
                 await this.unitOfWork.SaveAsync();
 
                 OnAfterDelete(entity);
+                await OnAfterDeleteAsync(entity);
 
                 return Ok(entity);
             }
