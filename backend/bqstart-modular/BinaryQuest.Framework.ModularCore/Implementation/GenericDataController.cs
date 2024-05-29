@@ -87,6 +87,7 @@ namespace BinaryQuest.Framework.ModularCore.Implementation
                 await this.unitOfWork.SaveAsync();
 
                 OnAfterCreate(entity);
+                await OnAfterCreateAsync(entity);
 
                 return Created(entity);
             }

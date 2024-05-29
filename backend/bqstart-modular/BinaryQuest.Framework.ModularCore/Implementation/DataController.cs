@@ -172,6 +172,11 @@ namespace BinaryQuest.Framework.ModularCore.Implementation
 
         }
 
+        protected virtual Task OnAfterCreateAsync(TEntity entity)
+        {
+            return Task.FromResult(entity);
+        }
+
         protected virtual void OnBeforeEdit(TEntity entity)
         {
 
