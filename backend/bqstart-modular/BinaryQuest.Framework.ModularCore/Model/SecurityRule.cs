@@ -15,6 +15,8 @@ namespace BinaryQuest.Framework.ModularCore.Model
         public string? ModelType { get; set; }
         [XmlAttribute(AttributeName = "roleName")]
         public string? RoleName { get; set; }
+        [XmlAttribute(AttributeName = "roleNames")]
+        public string? RoleNames { get; set; }
         [XmlAttribute(AttributeName = "allowSelect")]
         public bool AllowSelect { get; set; }
         [XmlAttribute(AttributeName = "allowInsert")]

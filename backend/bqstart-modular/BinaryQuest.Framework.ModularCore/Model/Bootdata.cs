@@ -24,29 +24,53 @@ namespace BinaryQuest.Framework.ModularCore.Model
             var rules = securityRulesProvider.GetRules();
             foreach (var rule in rules)
             {
-                if (rule.ModelType == null || rule.RoleName == null)
+                if (rule.ModelType == null || (rule.RoleName == null && rule.RoleNames == null))
                     continue;
 
                 if (!SecurityRulesDictionary.ContainsKey(rule.ModelType))
                 {
-                    SecurityRulesDictionary.Add(rule.ModelType, new Dictionary<string, SecurityRule>());
+                    SecurityRulesDictionary.Add(rule.ModelType, []);
                 }
 
                 Dictionary<string, SecurityRule> perModelDic = SecurityRulesDictionary[rule.ModelType];
 
-                if (!perModelDic.ContainsKey(rule.RoleName))
+                //check if Role name contains comma then multiple rule
+                if (rule.RoleNames != null)
                 {
-                    perModelDic.Add(rule.RoleName, rule);
+                    var roles = rule.RoleNames.Split(',');
+                    foreach (var role in roles)
+                    {
+                        if (!perModelDic.TryGetValue(role, out SecurityRule? value))
+                        {
+                            perModelDic.Add(role, rule);
+                        }
+                        else
+                        {
+                            //if already found then union merge with existing ones
+                            var existingRule = value;
+                            existingRule.AllowSelect = rule.AllowSelect;
+                            existingRule.AllowInsert = rule.AllowInsert;
+                            existingRule.AllowUpdate = rule.AllowUpdate;
+                            existingRule.AllowDelete = rule.AllowDelete;
+                        }
+                    }
                 }
-                else
+                else if (rule.RoleName != null)
                 {
-                    //if already found then union merge with existing ones
-                    var existingRule = perModelDic[rule.RoleName];
-                    existingRule.AllowSelect = rule.AllowSelect;
-                    existingRule.AllowInsert = rule.AllowInsert;
-                    existingRule.AllowUpdate = rule.AllowUpdate;
-                    existingRule.AllowDelete = rule.AllowDelete;
-                }
+                    if (!perModelDic.TryGetValue(rule.RoleName, out SecurityRule? value))
+                    {
+                        perModelDic.Add(rule.RoleName, rule);
+                    }
+                    else
+                    {
+                        //if already found then union merge with existing ones
+                        var existingRule = value;
+                        existingRule.AllowSelect = rule.AllowSelect;
+                        existingRule.AllowInsert = rule.AllowInsert;
+                        existingRule.AllowUpdate = rule.AllowUpdate;
+                        existingRule.AllowDelete = rule.AllowDelete;
+                    }
+                }                
             }
         }
 
