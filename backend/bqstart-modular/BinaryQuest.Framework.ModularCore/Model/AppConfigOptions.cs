@@ -1,4 +1,5 @@
-﻿using BinaryQuest.Framework.ModularCore;
+﻿// Ignore Spelling: App
+
 using BinaryQuest.Framework.ModularCore.Data;
 using BinaryQuest.Framework.ModularCore.Exceptions;
 using BinaryQuest.Framework.ModularCore.Extensions;
@@ -6,26 +7,17 @@ using BinaryQuest.Framework.ModularCore.Implementation;
 using BinaryQuest.Framework.ModularCore.Interface;
 using BinaryQuest.Framework.ModularCore.Security;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
 using Newtonsoft.Json;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using TimeZoneConverter;
 
 namespace BinaryQuest.Framework.ModularCore.Model
 {
