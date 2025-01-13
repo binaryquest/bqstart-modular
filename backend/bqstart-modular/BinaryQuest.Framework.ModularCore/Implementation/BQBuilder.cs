@@ -34,14 +34,16 @@ namespace BinaryQuest.Framework.ModularCore.Implementation
             Builder = builder;            
         }
 
-        public IApplicationBuilder Builder { get; }        
+        public IApplicationBuilder Builder { get; }
 
-        public IBQBuilder Build()
+        public IBQBuilder Build(Action<IApplicationBuilder>? optionalRouting)
         {
             Builder.UseMiddleware<StatusCodeExceptionHandler>();
 
             Builder.UseRouting();
-            
+
+            optionalRouting?.Invoke(Builder);
+
             Builder.UseAuthentication();            
             Builder.UseAuthorization();            
 
