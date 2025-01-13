@@ -15,5 +15,6 @@ namespace BinaryQuest.Framework.ModularCore.Interface
         IApplicationBuilder Builder { get; }
         IBQBuilder UseCustomEndpoints(Action<IEndpointRouteBuilder> endpoints);        
         IBQBuilder Build(Action<IApplicationBuilder>? optionalRouting);
+        IBQBuilder Build();
     }
 }
