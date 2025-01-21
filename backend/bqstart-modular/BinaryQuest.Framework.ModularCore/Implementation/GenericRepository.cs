@@ -43,11 +43,11 @@ namespace BinaryQuest.Framework.ModularCore.Implementation
 
             if (orderBy != null)
             {
-                return orderBy(query);
+                return orderBy(query).AsNoTracking();
             }
             else
             {
-                return query;
+                return query.AsNoTracking();
             }
         }
 
